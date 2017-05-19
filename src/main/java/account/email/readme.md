@@ -1,0 +1,2 @@
+# 我们没有在java代码中配置邮件服务器的信息,这得益于spring的依赖注入，通过外部的配置注入到了javaMailHelper中
+- 相关配置信息在resources/account-email.xml中

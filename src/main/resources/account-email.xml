@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--spring 用来帮助载入properties-->
+    <bean id="propertyConfigure"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:account-email.properties"></property>
+    </bean>
+    <!--利用propertyConfigure 加载classpath的根路径下名为account-email.properties文件中的属性-->
+    <!--使用了springframework的属性引用-->
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="protocol" value="${email.protocol}"/>
+        <property name="host" value="${email.host}"/>
+        <property name="port" value="${email.port}"/>
+        <property name="username" value="${email.username}"/>
+        <property name="password" value="${email.password}"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.${email.protocol}.auth">${email.auth}</prop>
+            </props>
+        </property>
+    </bean>
+    <!--注入bean javaMailSender 使其成为accountEmailService类javaMailSender的值-->
+    <bean id="accountEmailService" class="account.email.AccountEmailServiceImpl">
+        <property name="javaMailSender" ref="javaMailSender"/>
+        <property name="systemEmail" value="${email.systemEmail}"/>
+    </bean>
+</beans>
